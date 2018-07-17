@@ -1,3 +1,5 @@
+app.name: foo-svc
+
 spring.jpa:
   hibernate.ddl-auto: create-drop
   show-sql: true

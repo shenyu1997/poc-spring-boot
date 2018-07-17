@@ -31,4 +31,7 @@ public class FooService {
         fooRepository.save(foo);
     }
 
+    public void deleteById(Long id) {
+        fooRepository.deleteById(id);
+    }
 }
