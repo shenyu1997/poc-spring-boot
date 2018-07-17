@@ -1,15 +1,7 @@
 package yu.shen.pocboot.services.foo;
 
 public class FooUpdatedDTO {
-    private String name, description;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String description;
 
     public String getDescription() {
         return description;

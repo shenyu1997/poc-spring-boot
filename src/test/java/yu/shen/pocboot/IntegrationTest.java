@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 /**
  * Created by sheyu on 7/17/2018.
  */
@@ -25,4 +27,7 @@ public abstract class IntegrationTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected EntityManager entityManager;
 }

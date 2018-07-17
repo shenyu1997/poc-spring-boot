@@ -10,6 +10,7 @@ import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 import yu.shen.pocboot.common.exceptions.ExceptionDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by sheyu on 7/17/2018.
  */
+@Transactional
 public class FooControllerTest extends IntegrationTest {
 
     final String URI_SINGLE_FOO = FooController.URI_RESOURCES_ENDPOINT + FooController.URI_RESOURCE_ENDPOINT;
@@ -91,23 +93,25 @@ public class FooControllerTest extends IntegrationTest {
         assertThat(returned.getId(), notNullValue());
         assertThat(returned.getName(), equalTo(fooCreatedDTO.getName()));
         assertThat(returned.getDescription(), equalTo(fooCreatedDTO.getDescription()));
+        assertThat(returned.getVersion(), equalTo(0L));
     }
 
     @Test
     public void update() throws Exception {
         FooUpdatedDTO fooUpdatedDTO = new FooUpdatedDTO();
-        fooUpdatedDTO.setName("update name");
         fooUpdatedDTO.setDescription("update description");
 
         mvc.perform(put(URI_SINGLE_FOO, fooId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
                 .andExpect(status().isOk());
 
+        entityManager.flush(); //need flush to update version
+
         String body = mvc.perform(get(URI_SINGLE_FOO, fooId))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         FooDetailDTO fooDetailDTO = objectMapper.readValue(body, FooDetailDTO.class);
-        assertThat(fooDetailDTO.getName(), equalTo(fooUpdatedDTO.getName()));
         assertThat(fooDetailDTO.getDescription(), equalTo(fooUpdatedDTO.getDescription()));
+        assertThat(fooDetailDTO.getVersion(), equalTo(1L));
     }
 
     @Test
