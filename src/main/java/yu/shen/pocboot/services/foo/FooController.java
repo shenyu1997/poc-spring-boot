@@ -36,7 +36,7 @@ public class FooController {
     public List<FooListedDTO> findAll() {
         return fooService.findAll()
                 .stream()
-                .map(foo -> modelMapper.map(foo, FooListedDTO.class))
+                .map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -44,8 +44,7 @@ public class FooController {
     public ResponseEntity<Void> create(@RequestBody FooCreatedDTO fooDTO,
                                        HttpServletRequest request,
                                        ServletResponse response, ServletUriComponentsBuilder uriComponentsBuilder) {
-
-        Long id = fooService.create(modelMapper.map(fooDTO, Foo.class)).getId();
+        Long id = fooService.create(modelMapper.map(fooDTO, FooEntity.class)).getId();
         return ResponseEntity.created(uriComponentsBuilder
                 .fromRequest(request)
                 .path(URI_RESOURCE_ENDPOINT)
@@ -56,16 +55,16 @@ public class FooController {
     }
 
     @GetMapping(URI_RESOURCE_ENDPOINT)
-    public FooDetailDTO getById(@PathVariable("id") Long id) {
-        return modelMapper.map(fooService.getById(id), FooDetailDTO.class);
+    public FooDTO getById(@PathVariable("id") Long id) {
+        return modelMapper.map(fooService.getById(id), FooDTO.class);
     }
 
     @PutMapping(URI_RESOURCE_ENDPOINT)
     public void update(@PathVariable("id") Long id,
                        @RequestBody FooUpdatedDTO fooDTO) {
-            Foo foo = fooService.getById(id);
-            modelMapper.map(fooDTO, foo);
-            fooService.update(foo);
+            FooEntity fooEntity = fooService.getById(id);
+            modelMapper.map(fooDTO, fooEntity);
+            fooService.update(fooEntity);
 
     }
 

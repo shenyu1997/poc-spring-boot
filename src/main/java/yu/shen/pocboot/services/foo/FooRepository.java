@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FooRepository extends CrudRepository<Foo, Long> {
-    List<Foo> findAll();
+public interface FooRepository extends CrudRepository<FooEntity, Long> {
+    List<FooEntity> findAll();
 }

@@ -3,6 +3,7 @@ package yu.shen.pocboot.services.foo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by sheyu on 7/17/2018.
  */
 @Transactional
-public class FooControllerTest extends IntegrationTest {
+public class FooEntityControllerTest extends IntegrationTest {
 
     final String URI_SINGLE_FOO = FooController.URI_RESOURCES_ENDPOINT + FooController.URI_RESOURCE_ENDPOINT;
 
@@ -34,10 +35,10 @@ public class FooControllerTest extends IntegrationTest {
 
     @Before
     public void before() {
-        Foo foo = new Foo();
-        foo.setName("test");
-        foo.setDescription("test desc");
-        fooId = fooRepository.save(foo).getId();
+        FooEntity fooEntity = new FooEntity();
+        fooEntity.setName("test");
+        fooEntity.setDescription("test desc");
+        fooId = fooRepository.save(fooEntity).getId();
     }
 
     @After
@@ -60,10 +61,12 @@ public class FooControllerTest extends IntegrationTest {
         String body = mvc.perform(get(URI_SINGLE_FOO, fooId))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        FooDetailDTO result = objectMapper.readValue(body, FooDetailDTO.class);
+        FooDTO result = objectMapper.readValue(body, FooDTO.class);
         assertThat(result.getId(), equalTo(fooId));
         assertThat(result.getName(), equalTo("test"));
         assertThat(result.getDescription(), equalTo("test desc"));
+        assertThat(result.getCreatedDatetime(), notNullValue());
+        assertThat(result.getModifedDatetime(), notNullValue());
     }
 
     @Test
@@ -89,11 +92,22 @@ public class FooControllerTest extends IntegrationTest {
         String body = mvc.perform(get(urlOfNewFoo))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        FooDetailDTO returned = objectMapper.readValue(body, FooDetailDTO.class);
+        FooDTO returned = objectMapper.readValue(body, FooDTO.class);
         assertThat(returned.getId(), notNullValue());
         assertThat(returned.getName(), equalTo(fooCreatedDTO.getName()));
         assertThat(returned.getDescription(), equalTo(fooCreatedDTO.getDescription()));
         assertThat(returned.getVersion(), equalTo(0L));
+    }
+
+    @Test
+    @Ignore
+    public void createDuplicatedName() throws Exception {
+        FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
+        fooCreatedDTO.setName("test");
+
+        mvc.perform(post(FooController.URI_RESOURCES_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
+                .andExpect(status().isConflict());
+
     }
 
     @Test
@@ -109,9 +123,9 @@ public class FooControllerTest extends IntegrationTest {
         String body = mvc.perform(get(URI_SINGLE_FOO, fooId))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        FooDetailDTO fooDetailDTO = objectMapper.readValue(body, FooDetailDTO.class);
-        assertThat(fooDetailDTO.getDescription(), equalTo(fooUpdatedDTO.getDescription()));
-        assertThat(fooDetailDTO.getVersion(), equalTo(1L));
+        FooDTO fooDTO = objectMapper.readValue(body, FooDTO.class);
+        assertThat(fooDTO.getDescription(), equalTo(fooUpdatedDTO.getDescription()));
+        assertThat(fooDTO.getVersion(), equalTo(1L));
     }
 
     @Test
