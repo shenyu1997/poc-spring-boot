@@ -1,4 +1,4 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

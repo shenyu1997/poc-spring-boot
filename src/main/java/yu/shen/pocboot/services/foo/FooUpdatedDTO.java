@@ -1,6 +1,6 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
-public class FooUpdateddDTO {
+public class FooUpdatedDTO {
     private String name, description;
 
     public String getName() {

@@ -1,4 +1,4 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
 public class FooListedDTO {
     private Long id;

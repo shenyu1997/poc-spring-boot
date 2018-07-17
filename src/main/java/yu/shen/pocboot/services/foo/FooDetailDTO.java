@@ -1,3 +1,3 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
 public class FooDetailDTO extends  Foo { }

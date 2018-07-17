@@ -1,4 +1,4 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static yu.shen.pocboot.services.foo.FooController.URI_RESOURCES_ENDPOINT;
+
 @RestController
-@RequestMapping("/foo")
+@RequestMapping(URI_RESOURCES_ENDPOINT)
 public class FooController {
+
+    public static final String URI_RESOURCES_ENDPOINT = "/foo";
+    public static final String URI_RESOURCE_ENDPOINT = "/{id}";
+
 
     @Autowired
     private FooService fooService;
@@ -23,7 +29,7 @@ public class FooController {
 
     @GetMapping("/ping")
     public String ping() {
-        return "hello";
+        return "ok";
     }
 
     @GetMapping
@@ -42,31 +48,28 @@ public class FooController {
         Long id = fooService.create(modelMapper.map(fooDTO, Foo.class)).getId();
         return ResponseEntity.created(uriComponentsBuilder
                 .fromRequest(request)
-                .path("/{id}")
+                .path(URI_RESOURCE_ENDPOINT)
                 .build()
                 .expand(String.valueOf(id))
                 .toUri())
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public FooDetailDTO findById(@PathVariable("id") Long id) {
-        Foo result = fooService.findById(id).orElseThrow(() -> new RuntimeException("entity not found"));;
-        return modelMapper.map(result, FooDetailDTO.class);
+    @GetMapping(URI_RESOURCE_ENDPOINT)
+    public FooDetailDTO getById(@PathVariable("id") Long id) {
+        return modelMapper.map(fooService.getById(id), FooDetailDTO.class);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(URI_RESOURCE_ENDPOINT)
     public void update(@PathVariable("id") Long id,
-                       @RequestBody FooUpdateddDTO fooDTO) {
-        fooService.findById(id).ifPresentOrElse(foo -> {
+                       @RequestBody FooUpdatedDTO fooDTO) {
+            Foo foo = fooService.getById(id);
             modelMapper.map(fooDTO, foo);
             fooService.update(foo);
-        }, ()-> {
-            throw new RuntimeException("entity not found");
-        });
+
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(URI_RESOURCE_ENDPOINT)
     public void deleteById(@PathVariable("id") Long id) {
         fooService.deleteById(id);
     }

@@ -5,17 +5,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import yu.shen.pocboot.common.exceptions.EnableExceptionHandler;
-
-import javax.sql.DataSource;
 
 
 @SpringBootApplication
 @EnableWebMvc
 @EnableExceptionHandler
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern="yu.shen.pocboot.common.*"))
+@ComponentScan("yu.shen.pocboot.services")
 public class Application {
 
     public static void main(String[] args) {
@@ -23,7 +20,7 @@ public class Application {
     }
 
     @Bean
-    public ModelMapper modelMapper(DataSource dataSource) {
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 }

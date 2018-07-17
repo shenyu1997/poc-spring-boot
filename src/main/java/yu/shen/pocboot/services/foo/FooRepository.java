@@ -1,4 +1,4 @@
-package yu.shen.pocboot.foo;
+package yu.shen.pocboot.services.foo;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

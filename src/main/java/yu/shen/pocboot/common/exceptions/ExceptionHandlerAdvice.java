@@ -28,15 +28,26 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionDTO emptyResultDataAccessException(EmptyResultDataAccessException e) {
         ExceptionDTO result = modelMapper.map(e, ExceptionDTO.class);
-        result.setCorrolationId(UUID.randomUUID().toString());
+        result.setCorrelationId(UUID.randomUUID().toString());
         result.setTimestamp(System.currentTimeMillis());
         result.setService(service);
-        result.setError(ExceptionType.ENTITY_NOT_FOUND.getDescription());
-        result.setCode(ExceptionType.ENTITY_NOT_FOUND.name());
-        result.setMessage(e.getMessage());
+        result.setError("Entity Not Found");
+        result.setCode(EntityNotFoundException.CODE);
 
         logger.error(result.toString(), e);
         return result;
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionDTO entityNotFound(EntityNotFoundException e) {
+        ExceptionDTO result = modelMapper.map(e, ExceptionDTO.class);
+        result.setCorrelationId(UUID.randomUUID().toString());
+        result.setTimestamp(System.currentTimeMillis());
+        result.setService(service);
+        result.setError("Entity Not Found");
+
+        logger.error(result.toString(), e);
+        return result;
+    }
 }

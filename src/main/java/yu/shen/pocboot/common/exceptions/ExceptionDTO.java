@@ -1,7 +1,7 @@
 package yu.shen.pocboot.common.exceptions;
 
 public class ExceptionDTO {
-    private String corrolationId, service, error, code, message;
+    private String correlationId, service, error, code, message;
     private long timestamp;
 
     public String getCode() {
@@ -20,12 +20,12 @@ public class ExceptionDTO {
         this.message = message;
     }
 
-    public String getCorrolationId() {
-        return corrolationId;
+    public String getCorrelationId() {
+        return correlationId;
     }
 
-    public void setCorrolationId(String corrolationId) {
-        this.corrolationId = corrolationId;
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 
     public String getService() {
@@ -55,7 +55,7 @@ public class ExceptionDTO {
     @Override
     public String toString() {
         return "ExceptionDTO{" +
-                "corrolationId='" + corrolationId + '\'' +
+                "correlationId='" + correlationId + '\'' +
                 ", service='" + service + '\'' +
                 ", error='" + error + '\'' +
                 ", code='" + code + '\'' +
