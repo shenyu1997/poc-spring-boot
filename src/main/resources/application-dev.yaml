@@ -1,0 +1,7 @@
+spring.jpa:
+  show-sql: true
+  hibernate.ddl-auto: create-drop
+
+ogging.level.org.hibernate:
+  SQL: DEBUG
+  type.descriptor.sql.BasicBinder: TRACE

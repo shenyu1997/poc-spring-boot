@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -18,7 +19,7 @@ public abstract class BaseEntity {
     @GeneratedValue(generator = "long_by_uuid")
     private Long id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, unique = true)
     private String name;
 
     @Version
@@ -28,7 +29,7 @@ public abstract class BaseEntity {
     private String delete_token = DEFAULT_DELETE_TOKEN;
 
     public boolean isDeleted() {
-        return DEFAULT_DELETE_TOKEN == delete_token;
+        return !Objects.equals(DEFAULT_DELETE_TOKEN, delete_token);
     }
 
     public void setDeleted(boolean deleted) {

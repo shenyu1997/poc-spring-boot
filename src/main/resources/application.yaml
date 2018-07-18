@@ -2,6 +2,6 @@ app.name: foo-svc
 
 spring.jpa:
   show-sql: true
-  hibernate.ddl-auto: create-drop
+  hibernate.ddl-auto: validate
   properties:
     org.hibernate.envers.do_not_audit_optimistic_locking_field: false
