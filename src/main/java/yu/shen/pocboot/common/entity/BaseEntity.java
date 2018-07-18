@@ -1,5 +1,6 @@
 package yu.shen.pocboot.common.entity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -13,7 +14,8 @@ import java.util.UUID;
 public abstract class BaseEntity {
     private static final String DEFAULT_DELETE_TOKEN = "NA";
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GenericGenerator(name = "long_by_uuid", strategy = "yu.shen.pocboot.common.entity.LongIdentifierGenerator")
+    @GeneratedValue(generator = "long_by_uuid")
     private Long id;
 
     @Column(nullable = false, updatable = false)

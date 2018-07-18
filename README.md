@@ -8,10 +8,11 @@
 * Exception handler
 * How to write "integration test"
 * Base Entity
-* entity optimistic locking/version
+* Entity optimistic locking/version
 * DTO (Data transform object) Pattern
 * Audit solution
 * Soft deleted and unique key solution
+* ID Generator for get long by random uuid
 
 
 
