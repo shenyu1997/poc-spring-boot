@@ -13,6 +13,7 @@
 * Audit solution
 * Soft deleted and unique key solution
 * ID Generator for get long by random uuid
+* Database init/upgrade by Flyway
 
 
 
