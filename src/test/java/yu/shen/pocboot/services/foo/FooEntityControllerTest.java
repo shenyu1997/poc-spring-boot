@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 import yu.shen.pocboot.common.exceptions.ExceptionDTO;
@@ -26,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class FooEntityControllerTest extends IntegrationTest {
 
-    final String URI_SINGLE_FOO = FooController.URI_RESOURCES_ENDPOINT + FooController.URI_RESOURCE_ENDPOINT;
-
     @Autowired
     private FooRepository fooRepository;
 
@@ -39,6 +38,7 @@ public class FooEntityControllerTest extends IntegrationTest {
         fooEntity.setName("test");
         fooEntity.setDescription("test desc");
         fooId = fooRepository.save(fooEntity).getId();
+        entityManager.flush();
     }
 
     @After
@@ -48,7 +48,7 @@ public class FooEntityControllerTest extends IntegrationTest {
 
     @Test
     public void findAll() throws Exception {
-        String body = mvc.perform(get(FooController.URI_RESOURCES_ENDPOINT))
+        String body = mvc.perform(get(FooController.URI_ENDPOINT))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         List<FooListedDTO> result = objectMapper.readValue(body,new TypeReference<List<FooListedDTO>>(){});
@@ -58,7 +58,7 @@ public class FooEntityControllerTest extends IntegrationTest {
 
     @Test
     public void getById() throws Exception {
-        String body = mvc.perform(get(URI_SINGLE_FOO, fooId))
+        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, fooId))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         FooDTO result = objectMapper.readValue(body, FooDTO.class);
@@ -71,7 +71,7 @@ public class FooEntityControllerTest extends IntegrationTest {
 
     @Test
     public void getByIdNotExist() throws Exception {
-        String body = mvc.perform(get(URI_SINGLE_FOO, 1234L))
+        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, 1234L))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
         ExceptionDTO exceptionDTO = objectMapper.readValue(body, ExceptionDTO.class);
@@ -85,7 +85,7 @@ public class FooEntityControllerTest extends IntegrationTest {
         FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
         fooCreatedDTO.setName("new foo");
         fooCreatedDTO.setDescription("new foo description");
-        String urlOfNewFoo = mvc.perform(post(FooController.URI_RESOURCES_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
+        String urlOfNewFoo = mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"))
                 .andReturn().getResponse().getHeader("location");
@@ -105,7 +105,7 @@ public class FooEntityControllerTest extends IntegrationTest {
         FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
         fooCreatedDTO.setName("test");
 
-        mvc.perform(post(FooController.URI_RESOURCES_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
+        mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
                 .andExpect(status().isConflict());
 
     }
@@ -115,12 +115,12 @@ public class FooEntityControllerTest extends IntegrationTest {
         FooUpdatedDTO fooUpdatedDTO = new FooUpdatedDTO();
         fooUpdatedDTO.setDescription("update description");
 
-        mvc.perform(put(URI_SINGLE_FOO, fooId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
+        mvc.perform(put(FooController.URI_SINGLE_RESOURCE_ENDPOINT, fooId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
                 .andExpect(status().isOk());
 
         entityManager.flush(); //need flush to update version
 
-        String body = mvc.perform(get(URI_SINGLE_FOO, fooId))
+        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, fooId))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         FooDTO fooDTO = objectMapper.readValue(body, FooDTO.class);
@@ -131,7 +131,7 @@ public class FooEntityControllerTest extends IntegrationTest {
     @Test
     public void updateNoExist() throws Exception {
         FooUpdatedDTO fooUpdatedDTO = new FooUpdatedDTO();
-        String body = mvc.perform(put(URI_SINGLE_FOO, 1234L).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
+        String body = mvc.perform(put(FooController.URI_SINGLE_RESOURCE_ENDPOINT, 1234L).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
         ExceptionDTO exceptionDTO = objectMapper.readValue(body, ExceptionDTO.class);
@@ -140,20 +140,39 @@ public class FooEntityControllerTest extends IntegrationTest {
 
     @Test
     public void deleteFoo() throws Exception {
-        mvc.perform(delete(URI_SINGLE_FOO, fooId))
+        mvc.perform(delete(FooController.URI_SINGLE_RESOURCE_ENDPOINT, fooId))
             .andExpect(status().isOk());
 
-        mvc.perform(get(FooController.URI_RESOURCES_ENDPOINT))
+        mvc.perform(get(FooController.URI_ENDPOINT))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(equalTo(0)));
     }
 
     @Test
     public void deleteNoExist() throws Exception {
-        String body = mvc.perform(delete(URI_SINGLE_FOO, 1234L))
+        String body = mvc.perform(delete(FooController.URI_SINGLE_RESOURCE_ENDPOINT, 1234L))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
         ExceptionDTO exceptionDTO = objectMapper.readValue(body, ExceptionDTO.class);
         assertThat(exceptionDTO.getCode(),equalTo(EntityNotFoundException.CODE));
+    }
+
+    @Test
+    public void loadHistory() throws Exception {
+        FooUpdatedDTO fooUpdatedDTO = new FooUpdatedDTO();
+        fooUpdatedDTO.setDescription("new history update");
+
+        mvc.perform(put(FooController.URI_SINGLE_RESOURCE_ENDPOINT,fooId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooUpdatedDTO)))
+                .andExpect(status().isOk());
+
+        entityManager.flush();
+
+        String body = mvc.perform(get(FooController.URI_HISTORY, fooId))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<FooDTO> history = objectMapper.readValue(body, new TypeReference<List<FooDTO>>(){});
+        assertThat(history.size(), equalTo(1));
+
     }
 }

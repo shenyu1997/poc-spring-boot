@@ -2,24 +2,26 @@ package yu.shen.pocboot.services.foo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static yu.shen.pocboot.services.foo.FooController.URI_RESOURCES_ENDPOINT;
+import static yu.shen.pocboot.services.foo.FooController.URI_ENDPOINT;
 
 @RestController
-@RequestMapping(URI_RESOURCES_ENDPOINT)
 public class FooController {
 
-    public static final String URI_RESOURCES_ENDPOINT = "/foo";
-    public static final String URI_RESOURCE_ENDPOINT = "/{id}";
-
+    public static final String URI_ENDPOINT = "/foo";
+    public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{id}";
+    public static final String URI_HISTORY = URI_SINGLE_RESOURCE_ENDPOINT + "/history";
 
     @Autowired
     private FooService fooService;
@@ -27,12 +29,12 @@ public class FooController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/ping")
+    @GetMapping(URI_ENDPOINT + "/ping")
     public String ping() {
         return "ok";
     }
 
-    @GetMapping
+    @GetMapping(URI_ENDPOINT)
     public List<FooListedDTO> findAll() {
         return fooService.findAll()
                 .stream()
@@ -40,26 +42,26 @@ public class FooController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PostMapping(URI_ENDPOINT)
     public ResponseEntity<Void> create(@RequestBody FooCreatedDTO fooDTO,
                                        HttpServletRequest request,
                                        ServletResponse response, ServletUriComponentsBuilder uriComponentsBuilder) {
         Long id = fooService.create(modelMapper.map(fooDTO, FooEntity.class)).getId();
         return ResponseEntity.created(uriComponentsBuilder
                 .fromRequest(request)
-                .path(URI_RESOURCE_ENDPOINT)
+                .path("/{id}")
                 .build()
                 .expand(String.valueOf(id))
                 .toUri())
                 .build();
     }
 
-    @GetMapping(URI_RESOURCE_ENDPOINT)
+    @GetMapping(URI_SINGLE_RESOURCE_ENDPOINT)
     public FooDTO getById(@PathVariable("id") Long id) {
         return modelMapper.map(fooService.getById(id), FooDTO.class);
     }
 
-    @PutMapping(URI_RESOURCE_ENDPOINT)
+    @PutMapping(URI_SINGLE_RESOURCE_ENDPOINT)
     public void update(@PathVariable("id") Long id,
                        @RequestBody FooUpdatedDTO fooDTO) {
             FooEntity fooEntity = fooService.getById(id);
@@ -68,8 +70,18 @@ public class FooController {
 
     }
 
-    @DeleteMapping(URI_RESOURCE_ENDPOINT)
+    @DeleteMapping(URI_SINGLE_RESOURCE_ENDPOINT)
     public void deleteById(@PathVariable("id") Long id) {
         fooService.deleteById(id);
+    }
+
+
+    @GetMapping(URI_HISTORY)
+    public List<FooDTO> loadHistory(@PathVariable("id") Long id,
+                                    @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> from,
+                                    @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<LocalDateTime> to) {
+        return fooService.findHistoryById(id, from, to).stream()
+                .map(foo -> modelMapper.map(foo, FooDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,5 +39,9 @@ public class FooService {
 
     public void deleteById(Long id) {
         fooRepository.deleteById(id);
+    }
+
+    public List<FooEntity> findHistoryById(Long id, Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
+        return fooRepository.loadHistory(FooEntity.class, id, from, to);
     }
 }
