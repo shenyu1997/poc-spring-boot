@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,27 +17,31 @@ public class FooService {
     private FooRepository fooRepository;
 
 
-    public List<Foo> findAll() {
+    public List<FooEntity> findAll() {
         return  fooRepository.findAll();
     }
 
-    public Foo create(Foo foo) {
-        return fooRepository.save(foo);
+    public FooEntity create(FooEntity fooEntity) {
+        return fooRepository.save(fooEntity);
     }
 
-    public Optional<Foo> findById(Long id) {
+    public Optional<FooEntity> findById(Long id) {
         return fooRepository.findById(id);
     }
 
-    public Foo getById(Long id) {
-        return findById(id).orElseThrow(() -> new EntityNotFoundException(Foo.class, id));
+    public FooEntity getById(Long id) {
+        return findById(id).orElseThrow(() -> new EntityNotFoundException(FooEntity.class, id));
     }
 
-    public void update(Foo foo) {
-        fooRepository.save(foo);
+    public void update(FooEntity fooEntity) {
+        fooRepository.save(fooEntity);
     }
 
     public void deleteById(Long id) {
         fooRepository.deleteById(id);
+    }
+
+    public List<FooEntity> findHistoryById(Long id, Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
+        return fooRepository.loadHistory(FooEntity.class, id, from, to);
     }
 }

@@ -1,4 +1,4 @@
-package yu.shen.pocboot.entity;
+package yu.shen.pocboot.common.entity;
 
 import javax.persistence.*;
 
@@ -10,6 +10,8 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(nullable = false, updatable = false, unique = true)
     private String name;
 
     @Version

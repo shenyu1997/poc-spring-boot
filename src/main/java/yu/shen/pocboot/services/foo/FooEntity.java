@@ -1,14 +1,15 @@
 package yu.shen.pocboot.services.foo;
 
-import yu.shen.pocboot.entity.BaseEntity;
+import org.hibernate.envers.Audited;
+import yu.shen.pocboot.common.audite.AuditableEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Foo extends BaseEntity {
+@Table(name = "foo")
+@Audited
+public class FooEntity extends AuditableEntity {
 
     private String description;
 

@@ -1,21 +1,21 @@
-package yu.shen.pocboot.services.foo;
+package yu.shen.pocboot.common.entity;
 
-public class FooDetailDTO extends  Foo {
+import org.hibernate.envers.Audited;
+
+@Audited
+public abstract class BaseDTO {
     private Long id;
     private long version;
-    private String name, description;
+    private String name;
 
-    @Override
     public Long getId() {
         return id;
     }
 
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
-    @Override
     public long getVersion() {
         return version;
     }
@@ -24,23 +24,11 @@ public class FooDetailDTO extends  Foo {
         this.version = version;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
