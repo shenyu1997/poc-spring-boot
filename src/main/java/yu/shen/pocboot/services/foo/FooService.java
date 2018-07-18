@@ -37,8 +37,14 @@ public class FooService {
         fooRepository.save(fooEntity);
     }
 
-    public void deleteById(Long id) {
-        fooRepository.deleteById(id);
+    public void deleteById(Long id, Boolean isHard) {
+        if (isHard) {
+            fooRepository.deleteById(id);
+        } else {
+            FooEntity foo = this.getById(id);
+            foo.setDeleted(true);
+            fooRepository.save(foo);
+        }
     }
 
     public List<FooEntity> findHistoryById(Long id, Optional<LocalDateTime> from, Optional<LocalDateTime> to) {

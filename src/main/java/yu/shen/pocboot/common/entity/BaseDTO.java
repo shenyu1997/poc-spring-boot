@@ -7,6 +7,7 @@ public abstract class BaseDTO {
     private Long id;
     private long version;
     private String name;
+    private boolean isDeleted;
 
     public Long getId() {
         return id;
@@ -30,5 +31,13 @@ public abstract class BaseDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

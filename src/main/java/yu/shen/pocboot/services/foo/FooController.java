@@ -72,8 +72,8 @@ public class FooController {
     }
 
     @DeleteMapping(URI_SINGLE_RESOURCE_ENDPOINT)
-    public void deleteById(@PathVariable("id") Long id) {
-        fooService.deleteById(id);
+    public void deleteById(@PathVariable("id") Long id, @RequestParam("is_hard") Optional<Boolean> isHard) {
+        fooService.deleteById(id, isHard.orElse(false));
     }
 
 

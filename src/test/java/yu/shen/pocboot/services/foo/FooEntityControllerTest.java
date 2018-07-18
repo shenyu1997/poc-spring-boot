@@ -179,6 +179,5 @@ public class FooEntityControllerTest extends IntegrationTest {
 
         history = objectMapper.readValue(body, new TypeReference<List<FooDTO>>(){});
         assertThat(history.size(), equalTo(2));
-
     }
 }
