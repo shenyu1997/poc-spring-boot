@@ -4,7 +4,7 @@ import yu.shen.pocboot.common.entity.BaseDTO;
 
 public abstract class AuditableDTO extends BaseDTO {
     private Long createdDatetime;
-    private Long modifedDatetime;
+    private Long modifiedDatetime;
 
     public Long getCreatedDatetime() {
         return createdDatetime;
@@ -14,11 +14,11 @@ public abstract class AuditableDTO extends BaseDTO {
         this.createdDatetime = createdDatetime;
     }
 
-    public Long getModifedDatetime() {
-        return modifedDatetime;
+    public Long getModifiedDatetime() {
+        return modifiedDatetime;
     }
 
-    public void setModifedDatetime(Long modifedDatetime) {
-        this.modifedDatetime = modifedDatetime;
+    public void setModifiedDatetime(Long modifiedDatetime) {
+        this.modifiedDatetime = modifiedDatetime;
     }
 }

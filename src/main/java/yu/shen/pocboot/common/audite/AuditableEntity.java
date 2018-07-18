@@ -21,13 +21,13 @@ public abstract class AuditableEntity extends BaseEntity  {
 
     @Column(name = "modified_date")
     @LastModifiedDate
-    private Long modifedDatetime;
+    private Long modifiedDatetime;
 
     public Long getCreatedDatetime() {
         return createdDatetime;
     }
 
-    public Long getModifedDatetime() {
-        return modifedDatetime;
+    public Long getModifiedDatetime() {
+        return modifiedDatetime;
     }
 }

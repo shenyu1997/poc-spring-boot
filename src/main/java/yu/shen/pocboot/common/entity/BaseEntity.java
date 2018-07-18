@@ -1,11 +1,14 @@
 package yu.shen.pocboot.common.entity;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 
 /**
  * Created by sheyu on 7/17/2018.
  */
 @MappedSuperclass
+@Audited
 public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class AuditedQueryExecutorImpl<T> implements AuditedQueryExecutor<T> {
-    private static final String MODIFIED_DATATIME = "modifedDatetime";
+    private static final String MODIFIED_DATETIME = "modifiedDatetime";
 
     @Autowired
     private EntityManager entityManager;
@@ -26,15 +26,15 @@ public class AuditedQueryExecutorImpl<T> implements AuditedQueryExecutor<T> {
         AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(tClass, true, false);
 
         from.ifPresent(f -> {
-            query.add(AuditEntity.property(MODIFIED_DATATIME).ge(Timestamp.valueOf(f).getTime()));
+            query.add(AuditEntity.property(MODIFIED_DATETIME).ge(Timestamp.valueOf(f).getTime()));
         });
 
         to.ifPresent(t -> {
-            query.add(AuditEntity.property(MODIFIED_DATATIME).le(Timestamp.valueOf(t).getTime()));
+            query.add(AuditEntity.property(MODIFIED_DATETIME).le(Timestamp.valueOf(t).getTime()));
         });
 
         query.add(AuditEntity.property("id").eq(entityId));
-        query.addOrder(AuditEntity.property(MODIFIED_DATATIME).asc());
+        query.addOrder(AuditEntity.property(MODIFIED_DATETIME).asc());
         return query.getResultList();
     }
 
