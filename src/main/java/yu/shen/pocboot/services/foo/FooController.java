@@ -2,8 +2,8 @@ package yu.shen.pocboot.services.foo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class FooController {
     }
 
     @GetMapping(URI_ENDPOINT)
-    public Page<FooListedDTO> findAll(@PageableDefault Pageable pageable) {
+    public Slice<FooListedDTO> findAll(@PageableDefault Pageable pageable) {
         return fooService.findAll(pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
 
     }

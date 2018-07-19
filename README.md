@@ -14,6 +14,7 @@
 * Soft deleted and unique key solution
 * ID Generator for get long by random uuid
 * Database init/upgrade by Flyway
+* Pagination With Slice (Slice is better than Page because there is only one database reading action)
 
 
 

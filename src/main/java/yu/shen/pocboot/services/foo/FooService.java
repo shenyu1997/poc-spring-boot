@@ -1,8 +1,8 @@
 package yu.shen.pocboot.services.foo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
@@ -19,7 +19,7 @@ public class FooService {
     private FooRepository fooRepository;
 
 
-    public Page<FooEntity> findAll(Pageable pageable) {
+    public Slice<FooEntity> findAll(Pageable pageable) {
         return  fooRepository.findAll(pageable);
     }
 
