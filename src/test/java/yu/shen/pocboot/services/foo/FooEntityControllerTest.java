@@ -6,10 +6,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 import yu.shen.pocboot.common.exceptions.ExceptionDTO;
+import yu.shen.pocboot.common.pagination.PageClient;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -48,11 +50,13 @@ public class FooEntityControllerTest extends IntegrationTest {
     @Test
     public void findAll() throws Exception {
         String body = mvc.perform(get(FooController.URI_ENDPOINT))
-                .andExpect(status().isOk())
+               .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        List<FooListedDTO> result = objectMapper.readValue(body,new TypeReference<List<FooListedDTO>>(){});
-        assertThat(result, hasSize(1));
-        assertThat(result.get(0).getId(), equalTo(fooId));
+        PageClient<FooListedDTO> result = objectMapper.readValue(body,new TypeReference<PageClient<FooListedDTO>>(){});
+        assertThat(result.getTotalElements(), equalTo(1));
+        assertThat(result.getTotalPages(), equalTo(1));
+        assertThat(result.getContent(), hasSize(1));
+        assertThat(result.getContent().get(0).getId(), equalTo(fooId));
     }
 
     @Test

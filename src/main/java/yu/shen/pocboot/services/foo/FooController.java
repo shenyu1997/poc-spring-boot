@@ -2,7 +2,9 @@ package yu.shen.pocboot.services.foo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static yu.shen.pocboot.services.foo.FooController.URI_ENDPOINT;
 
 @RestController
 public class FooController {
@@ -36,11 +36,9 @@ public class FooController {
     }
 
     @GetMapping(URI_ENDPOINT)
-    public List<FooListedDTO> findAll() {
-        return fooService.findAll()
-                .stream()
-                .map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class))
-                .collect(Collectors.toList());
+    public Page<FooListedDTO> findAll(@PageableDefault Pageable pageable) {
+        return fooService.findAll(pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
+
     }
 
     @PostMapping(URI_ENDPOINT)

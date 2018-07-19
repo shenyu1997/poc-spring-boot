@@ -5,3 +5,11 @@ spring.jpa:
   hibernate.ddl-auto: validate
   properties:
     org.hibernate.envers.do_not_audit_optimistic_locking_field: false
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: '%h %l %u %t "%r" %s %b %D'
+      rotate: true
+    basedir: .

@@ -19,7 +19,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Created by sheyu on 7/17/2018.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
