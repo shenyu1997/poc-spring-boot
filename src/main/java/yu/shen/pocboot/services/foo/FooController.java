@@ -2,6 +2,7 @@ package yu.shen.pocboot.services.foo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
@@ -9,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import yu.shen.pocboot.common.entity.BaseEntity;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +41,16 @@ public class FooController {
     }
 
     @GetMapping(URI_ENDPOINT)
-    public Slice<FooListedDTO> findAll(@PageableDefault Pageable pageable) {
-        return fooService.findAll(pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
+    public Slice<FooListedDTO> findAll(@RequestParam(value = "name", required = false) String name,
+                                       @RequestParam(value = "count", required = false) Integer count,
+                                       @RequestParam(value = "description", required = false) String description,
+                                        @PageableDefault Pageable pageable) {
+        FooEntity prob = new FooEntity();
+        prob.setName(name);
+        prob.setCount(count);
+        prob.setDescription(description);
+
+        return fooService.findAll(Example.of(prob, BaseEntity.buildDefaultMatch()), pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
 
     }
 

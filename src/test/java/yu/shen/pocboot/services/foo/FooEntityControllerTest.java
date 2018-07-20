@@ -37,6 +37,7 @@ public class FooEntityControllerTest extends IntegrationTest {
     public void before() {
         FooEntity fooEntity = new FooEntity();
         fooEntity.setName(FOO_NAME);
+        fooEntity.setCount(100);
         fooEntity.setDescription("test desc");
         fooId = fooRepository.save(fooEntity).getId();
         entityManager.flush();
@@ -60,6 +61,26 @@ public class FooEntityControllerTest extends IntegrationTest {
         assertThat(result.getContent().get(0).getId(), equalTo(fooId));
     }
 
+    @Test
+    public void findAllWithExample() throws Exception {
+        FooUpdatedDTO fooUpdatedDTO = new FooUpdatedDTO();
+        fooUpdatedDTO.setDescription("new desc");
+        fooUpdatedDTO.setCount(100);
+        mvc.perform(put(FooController.URI_SINGLE_RESOURCE_ENDPOINT,fooId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(fooUpdatedDTO)))
+                .andExpect(status().isOk());
+
+
+        String body = mvc.perform(get(FooController.URI_ENDPOINT)
+                .param("name","te")
+                .param("count", "100"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        SliceDTO<FooListedDTO> result = objectMapper.readValue(body,new TypeReference<SliceDTO<FooListedDTO>>(){});
+        assertThat(result.hasNext(), equalTo(false));
+        assertThat(result.getNumberOfElements(), equalTo(1));
+        assertThat(result.getContent(), hasSize(1));
+        assertThat(result.getContent().get(0).getId(), equalTo(fooId));
+    }
     @Test
     public void getById() throws Exception {
         String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, fooId))

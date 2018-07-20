@@ -1,13 +1,12 @@
 package yu.shen.pocboot.services.foo;
 
+import com.google.common.primitives.Longs;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import com.google.common.primitives.Longs;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
-import yu.shen.pocboot.common.pagination.SliceDTO;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -22,8 +21,8 @@ public class FooService {
     private FooRepository fooRepository;
 
 
-    public Slice<FooEntity> findAll(Pageable pageable) {
-        return  fooRepository.findAll(pageable);
+    public Slice<FooEntity> findAll(Example<FooEntity> prob, Pageable pageable) {
+        return  fooRepository.findAll(prob, pageable);
     }
 
     public FooEntity create(FooEntity fooEntity) {

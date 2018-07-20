@@ -2,6 +2,7 @@ package yu.shen.pocboot.common.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
+import org.springframework.data.domain.ExampleMatcher;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,6 +14,14 @@ import java.util.UUID;
 @MappedSuperclass
 @Audited
 public abstract class BaseEntity {
+    public static ExampleMatcher buildDefaultMatch() {
+        return ExampleMatcher.matching()
+                .withIgnorePaths("version")
+                .withIgnorePaths("delete_token")
+                .withStringMatcher(ExampleMatcher.StringMatcher.STARTING)   // Match string containing pattern
+                .withIgnoreCase();
+    }
+
     private static final String DEFAULT_DELETE_TOKEN = "NA";
     @Id
     @GenericGenerator(name = "long_by_uuid", strategy = "yu.shen.pocboot.common.entity.LongIdentifierGenerator")
