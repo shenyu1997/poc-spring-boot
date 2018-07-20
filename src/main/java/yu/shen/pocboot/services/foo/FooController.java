@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,8 @@ public class FooController {
     public static final String URI_ENDPOINT = "/foo";
     public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{idOrName}";
     public static final String URI_HISTORY = URI_SINGLE_RESOURCE_ENDPOINT + "/history";
+
+    public static final String URI_SEARCH_FIND_BY_NAME_STARTSWITH = URI_ENDPOINT + "/search/nameStartsWith";
 
     @Autowired
     private FooService fooService;
@@ -42,7 +45,7 @@ public class FooController {
     }
 
     @PostMapping(URI_ENDPOINT)
-    public ResponseEntity<Void> create(@RequestBody FooCreatedDTO fooDTO,
+    public ResponseEntity<Void> create(@Valid  @RequestBody FooCreatedDTO fooDTO,
                                        HttpServletRequest request,
                                        ServletResponse response, ServletUriComponentsBuilder uriComponentsBuilder) {
         Long id = fooService.create(modelMapper.map(fooDTO, FooEntity.class)).getId();
@@ -81,5 +84,10 @@ public class FooController {
         return fooService.findHistoryById(id, from, to).stream()
                 .map(foo -> modelMapper.map(foo, FooDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(URI_SEARCH_FIND_BY_NAME_STARTSWITH)
+    public Slice<FooListedDTO> findByNameStartsWith(@RequestParam("name") String name, Pageable pageable) {
+        return fooService.findByNameStartsWith(name, pageable).map(foo -> modelMapper.map(foo, FooListedDTO.class));
     }
 }

@@ -13,4 +13,6 @@ public interface FooRepository extends CrudRepository<FooEntity, Long>, AuditedQ
     Slice<FooEntity> findAll(Pageable pageable);
 
     Optional<FooEntity> findByName(String name);
+
+    Slice<FooEntity> findByNameStartsWith(String name, Pageable pageable);
 }

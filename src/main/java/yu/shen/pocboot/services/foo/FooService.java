@@ -1,11 +1,13 @@
 package yu.shen.pocboot.services.foo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import com.google.common.primitives.Longs;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
+import yu.shen.pocboot.common.pagination.SliceDTO;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -57,5 +59,9 @@ public class FooService {
 
     public List<FooEntity> findHistoryById(Long id, Optional<LocalDateTime> from, Optional<LocalDateTime> to) {
         return fooRepository.loadHistory(FooEntity.class, id, from, to);
+    }
+
+    public Slice<FooEntity> findByNameStartsWith(String name, Pageable pageable) {
+        return fooRepository.findByNameStartsWith(name, pageable);
     }
 }

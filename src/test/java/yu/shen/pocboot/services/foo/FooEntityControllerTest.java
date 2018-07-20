@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class FooEntityControllerTest extends IntegrationTest {
 
+    public static final String FOO_NAME = "test";
     @Autowired
     private FooRepository fooRepository;
 
@@ -35,7 +36,7 @@ public class FooEntityControllerTest extends IntegrationTest {
     @Before
     public void before() {
         FooEntity fooEntity = new FooEntity();
-        fooEntity.setName("test");
+        fooEntity.setName(FOO_NAME);
         fooEntity.setDescription("test desc");
         fooId = fooRepository.save(fooEntity).getId();
         entityManager.flush();
@@ -66,7 +67,7 @@ public class FooEntityControllerTest extends IntegrationTest {
                 .andReturn().getResponse().getContentAsString();
         FooDTO result = objectMapper.readValue(body, FooDTO.class);
         assertThat(result.getId(), equalTo(fooId));
-        assertThat(result.getName(), equalTo("test"));
+        assertThat(result.getName(), equalTo( FOO_NAME));
         assertThat(result.getDescription(), equalTo("test desc"));
         assertThat(result.getCreatedDatetime(), notNullValue());
         assertThat(result.getModifiedDatetime(), notNullValue());
@@ -74,12 +75,12 @@ public class FooEntityControllerTest extends IntegrationTest {
 
     @Test
     public void getByName() throws Exception {
-        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, "test"))
+        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, FOO_NAME))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         FooDTO result = objectMapper.readValue(body, FooDTO.class);
         assertThat(result.getId(), equalTo(fooId));
-        assertThat(result.getName(), equalTo("test"));
+        assertThat(result.getName(), equalTo(FOO_NAME));
         assertThat(result.getDescription(), equalTo("test desc"));
         assertThat(result.getCreatedDatetime(), notNullValue());
         assertThat(result.getModifiedDatetime(), notNullValue());
@@ -97,9 +98,19 @@ public class FooEntityControllerTest extends IntegrationTest {
     }
 
     @Test
+    public void createWithErrorName() throws Exception {
+        FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
+        fooCreatedDTO.setName("12345");
+        fooCreatedDTO.setDescription("new foo description");
+        mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
     public void create() throws Exception {
         FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
-        fooCreatedDTO.setName("new foo");
+        fooCreatedDTO.setName("new Test");
         fooCreatedDTO.setDescription("new foo description");
         String urlOfNewFoo = mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
                 .andExpect(status().isCreated())
@@ -119,7 +130,7 @@ public class FooEntityControllerTest extends IntegrationTest {
     @Ignore("constraints check will be executed when db operated, but in test env the action will deffer")
     public void createDuplicatedName() throws Exception {
         FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
-        fooCreatedDTO.setName("test");
+        fooCreatedDTO.setName(FOO_NAME);
 
         mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(fooCreatedDTO)))
                 .andExpect(status().isConflict());
@@ -196,5 +207,22 @@ public class FooEntityControllerTest extends IntegrationTest {
 
         history = objectMapper.readValue(body, new TypeReference<List<FooDTO>>(){});
         assertThat(history.size(), equalTo(2));
+    }
+
+    @Test
+    public void findByNameStartsWith() throws Exception {
+        FooCreatedDTO fooCreatedDTO = new FooCreatedDTO();
+        fooCreatedDTO.setName("test123");
+        mvc.perform(post(FooController.URI_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(fooCreatedDTO)))
+                .andExpect(status().isCreated());
+
+        String body = mvc.perform(get(FooController.URI_SEARCH_FIND_BY_NAME_STARTSWITH).param("name",FOO_NAME))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        SliceDTO<FooListedDTO> page = objectMapper.readValue(body, new TypeReference<SliceDTO<FooListedDTO>>() {});
+
+        assertThat(page.getContent().size(), equalTo(2));
+
     }
 }

@@ -3,6 +3,15 @@ package yu.shen.pocboot.services.foo;
 public class FooListedDTO {
     private Long id;
     private String name;
+    private Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public Long getId() {
         return id;

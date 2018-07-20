@@ -1,15 +1,21 @@
 package yu.shen.pocboot.services.foo;
 
-public class FooCreatedDTO {
-    private String name, description;
+import yu.shen.pocboot.common.entity.BaseCreatedDTO;
 
-    public String getName() {
-        return name;
+public class FooCreatedDTO extends BaseCreatedDTO {
+
+
+    private String description;
+
+    public String getCount() {
+        return count;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCount(String count) {
+        this.count = count;
     }
+
+    private String count;
 
     public String getDescription() {
         return description;

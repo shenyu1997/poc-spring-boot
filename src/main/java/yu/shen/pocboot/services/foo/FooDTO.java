@@ -6,6 +6,16 @@ public class FooDTO extends AuditableDTO {
 
     private String description;
 
+    private Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
     public String getDescription() {
         return description;
     }
