@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import com.google.common.primitives.Longs;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
 import javax.transaction.Transactional;
@@ -27,23 +28,28 @@ public class FooService {
         return fooRepository.save(fooEntity);
     }
 
-    public Optional<FooEntity> findById(Long id) {
-        return fooRepository.findById(id);
+    public Optional<FooEntity> findByIdOrName(String idOrName) {
+        Long id = Longs.tryParse(idOrName);
+        if(id == null) {
+            return fooRepository.findByName(idOrName);
+        } else {
+            return fooRepository.findById(id);
+        }
     }
 
-    public FooEntity getById(Long id) {
-        return findById(id).orElseThrow(() -> new EntityNotFoundException(FooEntity.class, id));
+    public FooEntity getByIdOrName(String idOrName) {
+        return findByIdOrName(idOrName).orElseThrow(() -> new EntityNotFoundException(FooEntity.class, idOrName));
     }
 
     public void update(FooEntity fooEntity) {
         fooRepository.save(fooEntity);
     }
 
-    public void deleteById(Long id, Boolean isHard) {
+    public void deleteByIdOrName(String idOrName, Boolean isHard) {
+        FooEntity foo = this.getByIdOrName(idOrName);
         if (isHard) {
-            fooRepository.deleteById(id);
+            fooRepository.delete(foo);
         } else {
-            FooEntity foo = this.getById(id);
             foo.setDeleted(true);
             fooRepository.save(foo);
         }

@@ -73,6 +73,19 @@ public class FooEntityControllerTest extends IntegrationTest {
     }
 
     @Test
+    public void getByName() throws Exception {
+        String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, "test"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        FooDTO result = objectMapper.readValue(body, FooDTO.class);
+        assertThat(result.getId(), equalTo(fooId));
+        assertThat(result.getName(), equalTo("test"));
+        assertThat(result.getDescription(), equalTo("test desc"));
+        assertThat(result.getCreatedDatetime(), notNullValue());
+        assertThat(result.getModifiedDatetime(), notNullValue());
+    }
+
+    @Test
     public void getByIdNotExist() throws Exception {
         String body = mvc.perform(get(FooController.URI_SINGLE_RESOURCE_ENDPOINT, 1234L))
                 .andExpect(status().isNotFound())

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class FooController {
 
     public static final String URI_ENDPOINT = "/foo";
-    public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{id}";
+    public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{idOrName}";
     public static final String URI_HISTORY = URI_SINGLE_RESOURCE_ENDPOINT + "/history";
 
     @Autowired
@@ -56,24 +56,23 @@ public class FooController {
     }
 
     @GetMapping(URI_SINGLE_RESOURCE_ENDPOINT)
-    public FooDTO getById(@PathVariable("id") Long id) {
-        return modelMapper.map(fooService.getById(id), FooDTO.class);
+    public FooDTO getByIdOrName(@PathVariable("idOrName") String idOrName) {
+        return modelMapper.map(fooService.getByIdOrName(idOrName), FooDTO.class);
     }
 
     @PutMapping(URI_SINGLE_RESOURCE_ENDPOINT)
-    public void update(@PathVariable("id") Long id,
+    public void update(@PathVariable("idOrName") String idOrName,
                        @RequestBody FooUpdatedDTO fooDTO) {
-            FooEntity fooEntity = fooService.getById(id);
+            FooEntity fooEntity = fooService.getByIdOrName(idOrName);
             modelMapper.map(fooDTO, fooEntity);
             fooService.update(fooEntity);
 
     }
 
     @DeleteMapping(URI_SINGLE_RESOURCE_ENDPOINT)
-    public void deleteById(@PathVariable("id") Long id, @RequestParam("is_hard") Optional<Boolean> isHard) {
-        fooService.deleteById(id, isHard.orElse(false));
+    public void deleteById(@PathVariable("idOrName") String idOrName, @RequestParam("is_hard") Optional<Boolean> isHard) {
+        fooService.deleteByIdOrName(idOrName, isHard.orElse(false));
     }
-
 
     @GetMapping(URI_HISTORY)
     public List<FooDTO> loadHistory(@PathVariable("id") Long id,

@@ -6,7 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import yu.shen.pocboot.common.audite.AuditedQueryExecutor;
 
+import java.util.Optional;
+
 @Repository
 public interface FooRepository extends CrudRepository<FooEntity, Long>, AuditedQueryExecutor<FooEntity> {
     Slice<FooEntity> findAll(Pageable pageable);
+
+    Optional<FooEntity> findByName(String name);
 }
