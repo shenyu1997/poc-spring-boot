@@ -15,6 +15,7 @@
 * ID Generator for get long by random uuid
 * Database init/upgrade by Flyway
 * Pagination With Slice (Slice is better than Page because there is only one database reading action)
+* Support Find resource either by Id or by name.
 
 
 
