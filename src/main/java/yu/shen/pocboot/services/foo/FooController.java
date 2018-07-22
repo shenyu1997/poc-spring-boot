@@ -1,16 +1,20 @@
 package yu.shen.pocboot.services.foo;
 
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import yu.shen.pocboot.common.entity.BaseEntity;
+import yu.shen.pocboot.common.rsqlsupport.GenericRSQLVisitor;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -44,14 +48,21 @@ public class FooController {
     public Slice<FooListedDTO> findAll(@RequestParam(value = "name", required = false) String name,
                                        @RequestParam(value = "count", required = false) Integer count,
                                        @RequestParam(value = "description", required = false) String description,
+                                        @RequestParam(value = "filter") Optional<String> filter,
                                         @PageableDefault Pageable pageable) {
-        FooEntity prob = new FooEntity();
-        prob.setName(name);
-        prob.setCount(count);
-        prob.setDescription(description);
+        if(filter.isPresent()) {
+            Node root = new RSQLParser().parse(filter.get());
+            Specification<FooEntity> accept = root.accept(new GenericRSQLVisitor<>());
 
-        return fooService.findAll(Example.of(prob, BaseEntity.buildDefaultMatch()), pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
+            return fooService.findAll(accept, pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
+        } else {
+            FooEntity prob = new FooEntity();
+            prob.setName(name);
+            prob.setCount(count);
+            prob.setDescription(description);
 
+            return fooService.findAll(Example.of(prob, BaseEntity.buildDefaultMatch()), pageable).map(fooEntity -> modelMapper.map(fooEntity, FooListedDTO.class));
+        }
     }
 
     @PostMapping(URI_ENDPOINT)

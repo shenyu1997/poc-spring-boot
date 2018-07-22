@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
@@ -23,6 +24,10 @@ public class FooService {
 
     public Slice<FooEntity> findAll(Example<FooEntity> prob, Pageable pageable) {
         return  fooRepository.findAll(prob, pageable);
+    }
+
+    public Slice<FooEntity> findAll(Specification<FooEntity> specification, Pageable pageable) {
+        return  fooRepository.findAll(specification, pageable);
     }
 
     public FooEntity create(FooEntity fooEntity) {

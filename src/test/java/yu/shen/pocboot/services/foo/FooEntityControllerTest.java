@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
@@ -59,6 +60,17 @@ public class FooEntityControllerTest extends IntegrationTest {
         assertThat(result.getNumberOfElements(), equalTo(1));
         assertThat(result.getContent(), hasSize(1));
         assertThat(result.getContent().get(0).getId(), equalTo(fooId));
+    }
+
+    @Test
+    public void findAllByFilter() throws Exception {
+        final String filter = "(count==1,description==test*);name!=" + FOO_NAME;
+        String body = mvc.perform(get(FooController.URI_ENDPOINT).param("filter", filter))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Slice<FooListedDTO> retured = objectMapper.readValue(body, new TypeReference<SliceDTO<FooListedDTO>>(){});
+        assertThat(retured.getContent(), hasSize(0));
     }
 
     @Test
