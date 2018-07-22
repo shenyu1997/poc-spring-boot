@@ -17,6 +17,7 @@
 * Pagination With Slice (Slice is better than Page because there is only one database reading action)
 * Support Find resource either by Id or by name.
 * JPA --- Query by Example
+* JPA --- Query by Filter (REST Query Language)
 
 
 
