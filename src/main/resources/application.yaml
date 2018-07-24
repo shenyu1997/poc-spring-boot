@@ -13,3 +13,9 @@ server:
       pattern: '%h %l %u %t "%r" %s %b %D'
       rotate: true
     basedir: .
+
+bar:
+  schema: http
+  host: localhost
+  port: 8080
+  baseURL: /foo

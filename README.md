@@ -18,6 +18,9 @@
 * Support Find resource either by Id or by name.
 * JPA --- Query by Example
 * JPA --- Query by Filter (REST Query Language)
+* RestTemplate customize config
+* Sample of ConfigurationProperties
+* Test solution for Rest Call other "service", -- using WireMock
 
 
 

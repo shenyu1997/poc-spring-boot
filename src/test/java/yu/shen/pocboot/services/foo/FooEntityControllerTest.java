@@ -13,7 +13,6 @@ import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 import yu.shen.pocboot.common.exceptions.ExceptionDTO;
 import yu.shen.pocboot.common.pagination.SliceDTO;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -25,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by sheyu on 7/17/2018.
  */
-@Transactional
 public class FooEntityControllerTest extends IntegrationTest {
 
     public static final String FOO_NAME = "test";
