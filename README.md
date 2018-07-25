@@ -21,6 +21,7 @@
 * RestTemplate customize config
 * Sample of ConfigurationProperties
 * Test solution for Rest Call other "service", -- using WireMock
+* How to Customize RestTemplate, add common headers, add log output detail
 
 
 

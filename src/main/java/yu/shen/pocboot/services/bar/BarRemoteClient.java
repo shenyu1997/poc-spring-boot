@@ -61,7 +61,8 @@ public class BarRemoteClient {
                 .scheme(barProperties.schema)
                 .host(barProperties.host)
                 .port(barProperties.port)
-                .path(barProperties.baseURL).build().toUriString()).build();
+                .path(barProperties.baseURL).build().toUriString()).additionalCustomizers()
+                .build();
     }
 
     public Slice<FooListedDTO> findAll() {
