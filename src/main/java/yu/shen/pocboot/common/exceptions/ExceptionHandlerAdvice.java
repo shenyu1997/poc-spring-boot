@@ -23,7 +23,7 @@ public class ExceptionHandlerAdvice {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Value("${app.name}")
+    @Value("${spring.application.name}")
     private String service;
 
     @ExceptionHandler

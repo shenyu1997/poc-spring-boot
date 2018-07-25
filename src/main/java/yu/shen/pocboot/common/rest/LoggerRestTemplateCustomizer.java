@@ -16,7 +16,6 @@ public class LoggerRestTemplateCustomizer implements RestTemplateCustomizer {
     @Override
     public void customize(RestTemplate restTemplate) {
         restTemplate.getInterceptors().add((request, body, execution) -> {
-            logger.info("RestTemplate call, uri: {}, method:{}, headers: {}", request.getURI(),request.getMethod(), request.getHeaders());
             ClientHttpResponse result = null;
             try {
                 result = execution.execute(request, body);

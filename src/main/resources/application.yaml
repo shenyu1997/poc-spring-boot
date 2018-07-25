@@ -1,10 +1,10 @@
-app.name: foo-svc
-
-spring.jpa:
-  show-sql: true
-  hibernate.ddl-auto: validate
-  properties:
-    org.hibernate.envers.do_not_audit_optimistic_locking_field: false
+spring:
+  application.name: foo-svc
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: validate
+    properties:
+      org.hibernate.envers.do_not_audit_optimistic_locking_field: false
 
 server:
   tomcat:
@@ -14,8 +14,21 @@ server:
       rotate: true
     basedir: .
 
+foo.svc:
+  hostname: localhost
 bar:
   schema: http
   host: localhost
   port: 8080
   baseURL: /foo
+  max-connection: 20
+
+http-client:
+  max-total: 100
+  default-max-per-route: 20
+  connection-request-timeout: 2000
+  connection-timeout: 10000
+  socket-timeout: 10000
+  default-keep-alive: 5
+  max-idle-time: 30
+

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import yu.shen.pocboot.common.exceptions.EnableExceptionHandler;
+import yu.shen.pocboot.common.rest.EnableHttpClientRequestFactory;
 import yu.shen.pocboot.common.rest.EnableRestTempCommonHeaders;
 import yu.shen.pocboot.common.rest.EnableRestTemplateLogDetail;
 
@@ -17,6 +18,7 @@ import yu.shen.pocboot.common.rest.EnableRestTemplateLogDetail;
 @EnableExceptionHandler
 @EnableRestTemplateLogDetail
 @EnableRestTempCommonHeaders
+@EnableHttpClientRequestFactory
 @EnableJpaAuditing
 @ComponentScan("yu.shen.pocboot.services")
 public class Application {

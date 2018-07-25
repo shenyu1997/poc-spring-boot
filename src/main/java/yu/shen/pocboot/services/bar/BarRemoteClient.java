@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import yu.shen.pocboot.common.pagination.SliceDTO;
+import yu.shen.pocboot.common.rest.HttpConnectionPoolConfiguration;
 import yu.shen.pocboot.services.foo.FooListedDTO;
 
 @Component
@@ -17,25 +18,8 @@ import yu.shen.pocboot.services.foo.FooListedDTO;
 public class BarRemoteClient {
 
     @ConfigurationProperties("bar")
-    static class BarProperties {
-        private String schema, host, baseURL;
-        private int port;
-
-        public String getSchema() {
-            return schema;
-        }
-
-        public void setSchema(String schema) {
-            this.schema = schema;
-        }
-
-        public String getHost() {
-            return host;
-        }
-
-        public void setHost(String host) {
-            this.host = host;
-        }
+    static class BarProperties extends HttpConnectionPoolConfiguration {
+        private String baseURL;
 
         public String getBaseURL() {
             return baseURL;
@@ -44,25 +28,18 @@ public class BarRemoteClient {
         public void setBaseURL(String baseURL) {
             this.baseURL = baseURL;
         }
-
-        public int getPort() {
-            return port;
-        }
-
-        public void setPort(int port) {
-            this.port = port;
-        }
     }
 
     private RestTemplate restTemplate;
 
     public BarRemoteClient(RestTemplateBuilder restTemplateBuilder, BarProperties barProperties) {
         this.restTemplate = restTemplateBuilder.rootUri(UriComponentsBuilder.newInstance()
-                .scheme(barProperties.schema)
-                .host(barProperties.host)
-                .port(barProperties.port)
+                .scheme(barProperties.getSchema())
+                .host(barProperties.getHost())
+                .port(barProperties.getPort())
                 .path(barProperties.baseURL).build().toUriString()).additionalCustomizers()
                 .build();
+
     }
 
     public Slice<FooListedDTO> findAll() {

@@ -8,17 +8,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@Order(1)
+@Order(10)
 public class CommonHeaderRestTemplateCustomizer implements RestTemplateCustomizer {
 
-    @Value("${app.name}")
+    @Value("${spring.application.name}")
     private String appName;
+
+    @Value("${foo.svc.hostname}")
+    private String hostName;
 
     @Override
     public void customize(RestTemplate restTemplate) {
         restTemplate.getInterceptors().add((request, body, execution) -> {
             HttpHeaders headers = request.getHeaders();
             headers.add("service-name",appName);
+            headers.add("host-name",hostName);
             return execution.execute(request, body);
         });
     }
