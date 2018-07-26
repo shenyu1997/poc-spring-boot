@@ -5,9 +5,11 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.pagination.PageableDTO;
 import yu.shen.pocboot.common.pagination.SliceDTO;
@@ -34,6 +36,21 @@ public class BarControllerTest extends IntegrationTest {
         wireMockRule =  new WireMockRule(barProperties.getPort());
     }
 
+    /**
+     * This test is testing performance of "default requestFactory" and "HttpClient"
+     */
+    @Autowired
+    private RestTemplateBuilder builder;
+    @Test
+    public void testBaidu() {
+        long begin = System.currentTimeMillis();
+        for(int i=0; i<1000; i++) {
+            RestTemplate restTemplate = builder.build();
+            String page = restTemplate.getForObject("http://www.baidu.com", String.class);
+        }
+        System.out.println(">>>>>>>>>>>>>>>" + (System.currentTimeMillis() - begin));
+    }
+
     @Test
     public void findAll() throws Exception{
         FooListedDTO fooListedDTO = new FooListedDTO();
@@ -54,6 +71,8 @@ public class BarControllerTest extends IntegrationTest {
         assertThat(returned.getContent(), hasSize(1));
         assertThat(returned.getContent().get(0).getId(), equalTo(fooListedDTO.getId()));
         assertThat(returned.getContent().get(0).getName(), equalTo(fooListedDTO.getName()));
+
+
     }
 
 }
