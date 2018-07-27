@@ -33,8 +33,8 @@ public class HttpClientConfig {
 
     @ConfigurationProperties("http-client")
     static class HttpClientConfigurationProperties {
-        private int maxTotal;
-        private int defaultMaxPerRoute;
+        private int maxConnection;
+        private int maxConnectionPerRoute;
         private int connectionRequestTimeout;
         private int connectionTimeout;
         private int socketTimeout;
@@ -73,20 +73,20 @@ public class HttpClientConfig {
             this.socketTimeout = socketTimeout;
         }
 
-        public int getMaxTotal() {
-            return maxTotal;
+        public int getMaxConnection() {
+            return maxConnection;
         }
 
-        public void setMaxTotal(int maxTotal) {
-            this.maxTotal = maxTotal;
+        public void setMaxConnection(int maxConnection) {
+            this.maxConnection = maxConnection;
         }
 
-        public int getDefaultMaxPerRoute() {
-            return defaultMaxPerRoute;
+        public int getMaxConnectionPerRoute() {
+            return maxConnectionPerRoute;
         }
 
-        public void setDefaultMaxPerRoute(int defaultMaxPerRoute) {
-            this.defaultMaxPerRoute = defaultMaxPerRoute;
+        public void setMaxConnectionPerRoute(int maxConnectionPerRoute) {
+            this.maxConnectionPerRoute = maxConnectionPerRoute;
         }
     }
 
@@ -94,8 +94,8 @@ public class HttpClientConfig {
     public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager(HttpClientConfigurationProperties httpConnectionPoolConfiguration,
                                                                                  List<HttpConnectionPoolConfiguration> httpConnectionPoolConfigurationList) {
         PoolingHttpClientConnectionManager result = new PoolingHttpClientConnectionManager();
-        result.setMaxTotal(httpConnectionPoolConfiguration.getMaxTotal());
-        result.setDefaultMaxPerRoute(httpConnectionPoolConfiguration.getDefaultMaxPerRoute());
+        result.setMaxTotal(httpConnectionPoolConfiguration.getMaxConnection());
+        result.setDefaultMaxPerRoute(httpConnectionPoolConfiguration.getMaxConnectionPerRoute());
         for(HttpConnectionPoolConfiguration remoteConfiguration: httpConnectionPoolConfigurationList) {
             HttpHost httpHost = new HttpHost(remoteConfiguration.getHost(), remoteConfiguration.getPort(), remoteConfiguration.getSchema());
             result.setMaxPerRoute(new HttpRoute((httpHost)), remoteConfiguration.getMaxConnection());
@@ -152,7 +152,7 @@ public class HttpClientConfig {
         @Scheduled(fixedRate = 1000)
         public void idleConnectionMonitor() {
             connectionManager.closeExpiredConnections();
-            connectionManager.closeIdleConnections(httpClientConfigurationProperties.getMaxTotal(), TimeUnit.SECONDS);
+            connectionManager.closeIdleConnections(httpClientConfigurationProperties.getMaxConnection(), TimeUnit.SECONDS);
             logger.trace("connectionManager: {} is clean up idle connections and ExpiredConnections",connectionManager);
         }
     }

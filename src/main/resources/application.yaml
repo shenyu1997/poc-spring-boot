@@ -21,14 +21,14 @@ bar:
   host: localhost
   port: 8080
   baseURL: /foo
-  max-connection: 20
+  max-connection: 10
 
 http-client:
-  max-total: 100
-  default-max-per-route: 20
-  connection-request-timeout: 2000
-  connection-timeout: 10000
-  socket-timeout: 10000
+  max-connection: 100
+  max-connection-per-route: 10
+  connection-request-timeout: 50
+  connection-timeout: 100
+  socket-timeout: 350
   default-keep-alive: 5
   max-idle-time: 30
 

@@ -46,7 +46,7 @@ public class BarControllerTest extends IntegrationTest {
         long begin = System.currentTimeMillis();
         for(int i=0; i<1000; i++) {
             RestTemplate restTemplate = builder.build();
-            String page = restTemplate.getForObject("http://www.baidu.com", String.class);
+            String page = restTemplate.getForObject("https://www.github.com", String.class);
         }
         System.out.println(">>>>>>>>>>>>>>>" + (System.currentTimeMillis() - begin));
     }
