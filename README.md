@@ -26,4 +26,4 @@
 * How to handle ResponseError in RestTemplate
 * Adopt String-Retry
 * Adopt Netflix/Hystrix
-
+* Adopt Spring Cloud Sleuth
