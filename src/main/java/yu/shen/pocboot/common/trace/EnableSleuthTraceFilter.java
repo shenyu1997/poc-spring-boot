@@ -1,4 +1,4 @@
-package yu.shen.pocboot.common.rest;
+package yu.shen.pocboot.common.trace;
 
 import org.springframework.context.annotation.Import;
 
@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Import({RetryRestTemplateCustomizer.class, PrintoutRetryListener.class})
-public @interface EnableRestTemplateRetry {
+@Import({SleuthTraceFilter.class})
+public @interface EnableSleuthTraceFilter {
 }

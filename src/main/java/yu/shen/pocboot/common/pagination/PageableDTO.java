@@ -10,6 +10,10 @@ import java.util.Optional;
 public class PageableDTO extends PageRequest {
     public static final int DEFAULT_PAGE_SIZE = 15;
 
+    public static PageableDTO empty() {
+        return new PageableDTO(Optional.empty(),Optional.empty(), null);
+    }
+
     @JsonCreator
     @JsonIgnoreProperties(ignoreUnknown = true)
     public PageableDTO(@JsonProperty("pageNumber") Optional<Integer> page,

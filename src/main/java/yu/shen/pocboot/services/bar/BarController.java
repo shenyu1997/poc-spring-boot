@@ -1,5 +1,7 @@
 package yu.shen.pocboot.services.bar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import static yu.shen.pocboot.services.bar.BarController.URI_ENDPOINT;
 @RestController
 @RequestMapping(URI_ENDPOINT)
 public class BarController {
+    private Logger logger = LoggerFactory.getLogger("yu.shen.poc.services.foo");
     public static final String URI_ENDPOINT = "/bar";
     public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{idOrName}";
 
@@ -24,6 +27,7 @@ public class BarController {
 
     @GetMapping
     public Slice<BarListedDTO> findAll() {
+        logger.info("<><><><><><><> bar find all");
         return barService.findAll();
     }
 }

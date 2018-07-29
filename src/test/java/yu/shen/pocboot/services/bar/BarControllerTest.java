@@ -18,7 +18,6 @@ import yu.shen.pocboot.common.pagination.SliceDTO;
 import yu.shen.pocboot.services.foo.FooListedDTO;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -59,7 +58,7 @@ public class BarControllerTest extends IntegrationTest {
         FooListedDTO fooListedDTO = new FooListedDTO();
         fooListedDTO.setId(100L);
         fooListedDTO.setName("foo");
-        SliceDTO<FooListedDTO> result = new SliceDTO<>(Collections.singletonList(fooListedDTO),new PageableDTO(Optional.empty(),Optional.empty(), null),false);
+        SliceDTO<FooListedDTO> result = new SliceDTO<>(Collections.singletonList(fooListedDTO),PageableDTO.empty(),false);
         stubFor(com.github.tomakehurst.wiremock.client.WireMock.get(urlEqualTo("/foo/"))
                 .willReturn(aResponse()
                 .withStatus(HttpStatus.OK.value())
@@ -96,7 +95,7 @@ public class BarControllerTest extends IntegrationTest {
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())
                        .withFixedDelay(5000)));
-        assertThat(barRemoteClient.findAll(),equalTo(null));
+        assertThat(barRemoteClient.findAll().getContent(), hasSize(0));
     }
 
 }

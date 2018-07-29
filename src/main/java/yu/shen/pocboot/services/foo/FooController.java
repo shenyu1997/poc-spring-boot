@@ -1,8 +1,12 @@
 package yu.shen.pocboot.services.foo;
 
+import brave.Span;
+import brave.Tracer;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +31,8 @@ import java.util.stream.Collectors;
 @RestController
 public class FooController {
 
+    private Logger logger = LoggerFactory.getLogger("yu.shen.poc.services.foo");
+
     public static final String URI_ENDPOINT = "/foo";
     public static final String URI_SINGLE_RESOURCE_ENDPOINT = URI_ENDPOINT + "/{idOrName}";
     public static final String URI_HISTORY = URI_SINGLE_RESOURCE_ENDPOINT + "/history";
@@ -38,6 +44,7 @@ public class FooController {
 
     @Autowired
     private ModelMapper modelMapper;
+    private Span span;
 
     @GetMapping(URI_ENDPOINT + "/ping")
     public String ping() {
@@ -50,6 +57,9 @@ public class FooController {
                                        @RequestParam(value = "description", required = false) String description,
                                         @RequestParam(value = "filter") Optional<String> filter,
                                         @PageableDefault Pageable pageable) {
+        logger.info("<><><><><><><><><> foo find all");
+
+        fooService.printSomething();
         if(filter.isPresent()) {
             Node root = new RSQLParser().parse(filter.get());
             Specification<FooEntity> accept = root.accept(new GenericRSQLVisitor<>());

@@ -13,6 +13,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import yu.shen.pocboot.common.exceptions.EnableExceptionHandler;
 import yu.shen.pocboot.common.rest.EnableAutoWrap2HystrixBedRequestException;
@@ -20,6 +21,7 @@ import yu.shen.pocboot.common.rest.EnableRestTemplateRetry;
 import yu.shen.pocboot.common.rest.EnableHttpClientRequestFactory;
 import yu.shen.pocboot.common.rest.EnableRestTempCommonHeaders;
 import yu.shen.pocboot.common.rest.EnableRestTemplateLogDetail;
+import yu.shen.pocboot.common.trace.EnableSleuthTraceFilter;
 
 
 @SpringBootApplication
@@ -28,6 +30,7 @@ import yu.shen.pocboot.common.rest.EnableRestTemplateLogDetail;
 @EnableCircuitBreaker
 @EnableHystrix
 @EnableRetry
+@EnableAsync
 @ComponentScan("yu.shen.pocboot.services")
 
 @EnableExceptionHandler
@@ -36,6 +39,7 @@ import yu.shen.pocboot.common.rest.EnableRestTemplateLogDetail;
 @EnableHttpClientRequestFactory
 @EnableRestTemplateRetry
 @EnableAutoWrap2HystrixBedRequestException
+@EnableSleuthTraceFilter
 
 public class Application {
 

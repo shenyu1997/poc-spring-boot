@@ -51,7 +51,7 @@ public class BarRemoteClient {
     }
 
     public Slice<FooListedDTO> findAllFallback() {
-        return null;
+        return SliceDTO.empty();
     }
 
     @HystrixCommand(groupKey = "BarRemoteClient", commandKey = "fin404", fallbackMethod = "fallback404")

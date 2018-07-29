@@ -10,7 +10,8 @@ server:
   tomcat:
     accesslog:
       enabled: true
-      pattern: '%h %l %u %t "%r" %s %b %D'
+      pattern: '%h %l %u %t "%{X-B3-TraceId}o" "%r" %s %b %D '
+      # pattern: '%h %t "%r" %s %b %D "%{Referer}i" "%{User-agent}i" "%{X-B3-TraceId}i"'
       rotate: true
     basedir: .
 

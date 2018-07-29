@@ -1,11 +1,14 @@
 package yu.shen.pocboot.services.foo;
 
 import com.google.common.primitives.Longs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import yu.shen.pocboot.common.exceptions.EntityNotFoundException;
 
@@ -17,6 +20,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class FooService {
+
+    private Logger logger = LoggerFactory.getLogger("yu.shen.poc.services.foo");
 
     @Autowired
     private FooRepository fooRepository;
@@ -67,5 +72,10 @@ public class FooService {
 
     public Slice<FooEntity> findByNameStartsWith(String name, Pageable pageable) {
         return fooRepository.findByNameStartsWith(name, pageable);
+    }
+
+    @Async
+    public void printSomething() {
+        logger.info("====== async call ======");
     }
 }
