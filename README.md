@@ -24,4 +24,6 @@
 * How to Customize RestTemplate, add common headers, add log output detail
 * How config RestTemplate using HttpClient with fully control
 * How to handle ResponseError in RestTemplate
+* Adopt String-Retry
+* Adopt Netflix/Hystrix
 

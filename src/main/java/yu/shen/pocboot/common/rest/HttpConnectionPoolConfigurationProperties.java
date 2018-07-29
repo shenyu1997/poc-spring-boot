@@ -1,6 +1,6 @@
 package yu.shen.pocboot.common.rest;
 
-public abstract class HttpConnectionPoolConfiguration {
+public abstract class HttpConnectionPoolConfigurationProperties {
     private String schema;
     private String host;
     private int port;

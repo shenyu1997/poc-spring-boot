@@ -32,3 +32,14 @@ http-client:
   default-keep-alive: 5
   max-idle-time: 30
 
+hystrix.command.default:
+  execution.isolation.strategy: SEMAPHORE
+  requestCache.enabled: false
+
+rest.retry:
+  max-attempts: 2
+  backoff:
+    delay: 100
+    multiplier: 2
+    max-interval: 30000
+

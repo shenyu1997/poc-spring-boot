@@ -1,12 +1,14 @@
 logging.level:
   org.hibernate:
-    SQL: DEBUG
-    type.descriptor.sql.BasicBinder: TRACE
+    SQL: INFO
+    type.descriptor.sql.BasicBinder: INFO
+  org.springframework.retry: DEBUG
   yu.shen.poc.common.rest: DEBUG
+  com.netflix.hystrix: DEBUG
 
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate.ddl-auto: create-drop
   datasource:
     generate-unique-name: true

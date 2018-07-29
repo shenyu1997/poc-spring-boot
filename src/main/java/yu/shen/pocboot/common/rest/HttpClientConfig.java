@@ -41,6 +41,14 @@ public class HttpClientConfig {
         private int defaultKeepAlive;
         private int maxIdleTime;
 
+        public int getMaxIdleTime() {
+            return maxIdleTime;
+        }
+
+        public void setMaxIdleTime(int maxIdleTime) {
+            this.maxIdleTime = maxIdleTime;
+        }
+
         public int getDefaultKeepAlive() {
             return defaultKeepAlive;
         }
@@ -92,11 +100,11 @@ public class HttpClientConfig {
 
     @Bean
     public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager(HttpClientConfigurationProperties httpConnectionPoolConfiguration,
-                                                                                 List<HttpConnectionPoolConfiguration> httpConnectionPoolConfigurationList) {
+                                                                                 List<HttpConnectionPoolConfigurationProperties> httpConnectionPoolConfigurationList) {
         PoolingHttpClientConnectionManager result = new PoolingHttpClientConnectionManager();
         result.setMaxTotal(httpConnectionPoolConfiguration.getMaxConnection());
         result.setDefaultMaxPerRoute(httpConnectionPoolConfiguration.getMaxConnectionPerRoute());
-        for(HttpConnectionPoolConfiguration remoteConfiguration: httpConnectionPoolConfigurationList) {
+        for(HttpConnectionPoolConfigurationProperties remoteConfiguration: httpConnectionPoolConfigurationList) {
             HttpHost httpHost = new HttpHost(remoteConfiguration.getHost(), remoteConfiguration.getPort(), remoteConfiguration.getSchema());
             result.setMaxPerRoute(new HttpRoute((httpHost)), remoteConfiguration.getMaxConnection());
         }
@@ -152,7 +160,7 @@ public class HttpClientConfig {
         @Scheduled(fixedRate = 1000)
         public void idleConnectionMonitor() {
             connectionManager.closeExpiredConnections();
-            connectionManager.closeIdleConnections(httpClientConfigurationProperties.getMaxConnection(), TimeUnit.SECONDS);
+            connectionManager.closeIdleConnections(httpClientConfigurationProperties.getMaxIdleTime(), TimeUnit.SECONDS);
             logger.trace("connectionManager: {} is clean up idle connections and ExpiredConnections",connectionManager);
         }
     }

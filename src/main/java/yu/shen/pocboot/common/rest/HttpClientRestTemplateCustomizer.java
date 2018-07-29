@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@Order(10)
+@Order(20)
 public class HttpClientRestTemplateCustomizer implements RestTemplateCustomizer {
 
     @Autowired

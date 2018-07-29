@@ -2,6 +2,7 @@ package yu.shen.pocboot.services.bar;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import yu.shen.pocboot.IntegrationTest;
 import yu.shen.pocboot.common.pagination.PageableDTO;
@@ -42,6 +44,7 @@ public class BarControllerTest extends IntegrationTest {
     @Autowired
     private RestTemplateBuilder builder;
     @Test
+    @Ignore
     public void testBaidu() {
         long begin = System.currentTimeMillis();
         for(int i=0; i<1000; i++) {
@@ -73,6 +76,27 @@ public class BarControllerTest extends IntegrationTest {
         assertThat(returned.getContent().get(0).getName(), equalTo(fooListedDTO.getName()));
 
 
+    }
+
+    @Autowired
+    private BarRemoteClient barRemoteClient;
+
+    @Test(expected = HttpClientErrorException.class)
+    public void test404() {
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.get(urlEqualTo("/foo/yyyy"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.NOT_FOUND.value())
+                        ));
+        barRemoteClient.fin404();
+    }
+
+    @Test
+    public void testTimeoutWithFallBack() {
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.get(urlEqualTo("/foo/"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                       .withFixedDelay(5000)));
+        assertThat(barRemoteClient.findAll(),equalTo(null));
     }
 
 }
