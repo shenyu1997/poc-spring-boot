@@ -34,6 +34,7 @@ http-client:
   max-idle-time: 30
 
 hystrix.command.default:
+  execution.timeout.enabled: false
   execution.isolation.strategy: SEMAPHORE
   requestCache.enabled: false
 
@@ -44,3 +45,19 @@ rest.retry:
     multiplier: 2
     max-interval: 30000
 
+
+bar-server:
+  ribbon:
+    eureka:
+      enabled: false
+    listOfServers: localhost:${bar.port}
+    ServerListRefreshInterval: 15000
+
+feign:
+  hystrix.enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic

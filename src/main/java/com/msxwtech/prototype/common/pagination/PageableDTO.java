@@ -11,14 +11,14 @@ public class PageableDTO extends PageRequest {
     public static final int DEFAULT_PAGE_SIZE = 15;
 
     public static PageableDTO empty() {
-        return new PageableDTO(Optional.empty(),Optional.empty(), null);
+        return new PageableDTO(1,DEFAULT_PAGE_SIZE, null);
     }
 
     @JsonCreator
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public PageableDTO(@JsonProperty("pageNumber") Optional<Integer> page,
-                       @JsonProperty("pageSize") Optional<Integer> size,
+    public PageableDTO(@JsonProperty("pageNumber") Integer page,
+                       @JsonProperty("pageSize") Integer size,
                        @JsonProperty("sort") SortDTO sort) {
-        super(page.orElse(0), size.orElse(DEFAULT_PAGE_SIZE), sort);
+        super(page == null? 1:page, size == null? DEFAULT_PAGE_SIZE : size, sort);
     }
 }

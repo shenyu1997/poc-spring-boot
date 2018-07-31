@@ -22,12 +22,29 @@ public class BarController {
 
     @GetMapping("ping")
     public String ping() {
-        return "ok";
+        return barService.ping();
+    }
+
+    @GetMapping("ping/feign")
+    public String pingFeign() {
+        return barService.pingByFeign();
     }
 
     @GetMapping
     public Slice<BarListedDTO> findAll() {
         logger.info("<><><><><><><> bar find all");
         return barService.findAll();
+    }
+
+    @GetMapping("/ribbon")
+    public Slice<BarListedDTO> findAllByRibbon() {
+        logger.info("{{{{}}}} bar find all");
+        return barService.findAllByRibbon();
+    }
+
+    @GetMapping("/feign")
+    public Slice<BarListedDTO> findAllBFeign() {
+        logger.info("{{{{}}}} bar find all");
+        return barService.findAllByFeign();
     }
 }

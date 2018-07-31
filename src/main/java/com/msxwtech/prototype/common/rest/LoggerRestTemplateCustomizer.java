@@ -21,7 +21,7 @@ public class LoggerRestTemplateCustomizer implements RestTemplateCustomizer {
                 result = execution.execute(request, body);
                 return result;
             } finally {
-                logger.debug("rest call >>>> uri:{}, method:{}, request headers:{}, response code:{}, response headers:{}",
+                logger.debug("Rest call for url:{}, method:{}, request headers:{}, response code:{}, response headers:{}",
                         request.getURI(),
                         request.getMethod(),
                         request.getHeaders(),

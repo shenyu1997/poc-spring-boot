@@ -15,7 +15,7 @@ public class SortDTO extends Sort {
     @JsonCreator
     @JsonIgnoreProperties(ignoreUnknown = true)
     public SortDTO(@JsonProperty("direction") Direction direction,
-                   @JsonProperty("properties") Optional<List<String>> properties) {
-        super(direction, properties.orElse(Arrays.asList(NA)));
+                   @JsonProperty("properties") List<String> properties) {
+        super(direction, properties == null? Arrays.asList(NA) : properties);
     }
 }

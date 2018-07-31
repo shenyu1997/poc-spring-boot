@@ -19,11 +19,6 @@ public class CommonHeaderRestTemplateCustomizer implements RestTemplateCustomize
 
     @Override
     public void customize(RestTemplate restTemplate) {
-        restTemplate.getInterceptors().add((request, body, execution) -> {
-            HttpHeaders headers = request.getHeaders();
-            headers.add("service-name",appName);
-            headers.add("host-name",hostName);
-            return execution.execute(request, body);
-        });
+        restTemplate.getInterceptors().add(new CommonHeadersInterceptor(appName, hostName));
     }
 }

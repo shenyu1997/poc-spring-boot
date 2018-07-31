@@ -7,3 +7,4 @@ logging.level:
     SQL: DEBUG
     type.descriptor.sql.BasicBinder: TRACE
   com.msxwtech.prototype.common.rest: DEBUG
+  org.springframework.cloud.netflix.ribbon: DEBUG

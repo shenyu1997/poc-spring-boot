@@ -27,3 +27,4 @@
 * How to adopt String-Retry
 * How to adopt Netflix/Hystrix
 * How to adopt Spring Cloud Sleuth
+* How to adopt Ribbon
