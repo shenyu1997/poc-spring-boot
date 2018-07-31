@@ -3,7 +3,7 @@ logging.level:
     SQL: INFO
     type.descriptor.sql.BasicBinder: INFO
   org.springframework.retry: DEBUG
-  yu.shen.poc.common.rest: DEBUG
+  com.msxwtech.prototype.common.rest: DEBUG
   com.netflix.hystrix: DEBUG
 
 spring:
