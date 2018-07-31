@@ -1,6 +1,6 @@
 # prototype-adam
 
-*This project "How to" project, show same solution and best practice*
+*This project "How to" project, show some solution and best practice*
 
 * How to struct/organize your Project/folder
 * How to "Enable common util feature by toggle" 
