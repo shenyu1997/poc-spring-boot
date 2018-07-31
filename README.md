@@ -1,4 +1,4 @@
-# poc-spring-boot
+# prototype-adam
 
 *This project "How to" project, show same solution and best practice*
 
